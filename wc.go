@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -10,14 +11,18 @@ import (
 // Call the count function to count the number of words
 // received from the Standard Input and printing it out
 func main() {
-	fmt.Println(count(os.Stdin))
+	lines := flag.Bool("l", false, "Count lines")
+	flag.Parse()
+	fmt.Println(count(os.Stdin, *lines))
 }
 
 // Count the words received from the reader
-func count(r io.Reader) int {
+func count(r io.Reader, countLines bool) int {
 	scanner := bufio.NewScanner(r)
 	// Define the scanner split type to words (default is split by lines)
-	scanner.Split(bufio.ScanWords)
+	if !countLines {
+		scanner.Split(bufio.ScanWords)
+	}
 
 	wc := 0
 	for scanner.Scan() {
